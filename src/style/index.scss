@@ -1,0 +1,248 @@
+@import "config";
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&display=swap");
+@import "~@react-md/button/dist/mixins";
+
+$bg-co: #181a1b;
+$fg-co: #e8e6e3;
+$red: #bf1209;
+$sep-co: #212222;
+
+body {
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+}
+
+.dragDrop {
+  border: 2px dashed grey;
+  margin: 10px;
+  height: 20vh;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+}
+.dragDropText {
+  color: white;
+  margin-top: 8vh;
+}
+
+md-gridlist {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  height: 100%;
+  flex-direction: row;
+}
+
+.modal-header {
+  background-color: $bg-co;
+}
+.caps {
+  text-transform: uppercase;
+  font-weight: 500;
+  font-family: sans-serif;
+}
+
+.modal-body {
+  background-color: $bg-co;
+}
+.modal-footer {
+  background-color: $bg-co;
+}
+
+.App {
+  display: flex;
+  justify-content: center;
+  font-family: "Poppins", sans-serif;
+}
+
+html {
+  background-color: $bg-co;
+}
+
+#root {
+  color: #e8e6e3;
+  background-color: $bg-co;
+}
+
+.third-seperator-tasks {
+  background-color: $red;
+  min-width: 440px;
+  height: 10px;
+}
+
+.Task-Column {
+  border-left: 1px solid;
+  border-right: 1px solid;
+  border-color: $sep-co;
+  padding: 5px;
+  width: 340px;
+}
+.inprow {
+  display: flex;
+  justify-content: space-between;
+  padding: 13px;
+  padding-bottom: 25px;
+}
+
+.con {
+  background-color: $bg-co;
+  border: 1px solid;
+  border-color: $sep-co;
+}
+
+.mail-tasks-svg {
+  display: block;
+  fill: currentcolor;
+  --darkreader-inline-fill: currentcolor;
+}
+
+.div-tasks-footer {
+  margin: 10px;
+  height: 100px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.inner-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-left: 20px;
+}
+
+.mail-tasks {
+  text-decoration: none;
+  border: 0px;
+  width: 45px;
+  height: 45px;
+  padding: 2px;
+  margin: 5px;
+  color: rgb(17, 203, 233);
+  border-radius: 35%;
+  background-color: rgb(13, 39, 68);
+  --darkreader-inline-border-top: initial;
+  --darkreader-inline-border-right: initial;
+  --darkreader-inline-border-bottom: initial;
+  --darkreader-inline-border-left: initial;
+  --darkreader-inline-color: #2cd5f0;
+  --darkreader-inline-bgcolor: #0a1f36;
+}
+
+.github-icon-svg {
+  display: block;
+  fill: currentcolor;
+  --darkreader-inline-fill: currentcolor;
+}
+
+.github-icon {
+  text-decoration: none;
+  border: 0px;
+  width: 45px;
+  height: 45px;
+  padding: 2px;
+  margin: 5px;
+  color: rgb(17, 203, 233);
+  border-radius: 35%;
+  background-color: rgb(13, 39, 68);
+  --darkreader-inline-border-top: initial;
+  --darkreader-inline-border-right: initial;
+  --darkreader-inline-border-bottom: initial;
+  --darkreader-inline-border-left: initial;
+  --darkreader-inline-color: #2cd5f0;
+  --darkreader-inline-bgcolor: #0a1f36;
+}
+
+.mr-1 {
+  color: $fg-co;
+}
+
+.icon-Button {
+  margin: 5px;
+  cursor: auto;
+}
+.middel-task-toolbar {
+  padding: 10px;
+  background-color: $sep-co;
+  min-width: 440px;
+}
+
+.container {
+  background-color: $bg-co;
+}
+
+.arrow-icon-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.con {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  padding-bottom: 0;
+  padding-top: 15px;
+}
+
+.CenterDiv {
+  max-width: 800px;
+  margin: 30px auto;
+  overflow: auto;
+  min-height: 200px;
+  border: 1px solid steelblue;
+  padding: 30px;
+  border-radius: 5px;
+  color: $fg-co;
+  background-color: $bg-co;
+}
+.innerContainer {
+  min-width: 360px;
+  overflow: hidden;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+}
+
+.textInTaskRow {
+  width: 100%;
+}
+
+.arrow-icons {
+  height: 0px;
+  width: 0px;
+  margin: 0px;
+}
+
+.toolbar-div {
+  display: flex;
+  justify-content: space-between;
+  margin: 5px;
+  padding-right: 20px;
+}
+
+.date-row-main-div {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+::-webkit-scrollbar {
+  display: none;
+}
+.taskRow {
+  height: 30px;
+  margin: 2px;
+}
+.divtextrow {
+  height: 22px;
+  width: 260px;
+  overflow: hidden;
+  overflow-x: scroll;
+  white-space: nowrap;
+}
+.arrow-icons {
+  height: 70px;
+  width: 30px;
+  margin: 3px;
+}

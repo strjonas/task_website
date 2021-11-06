@@ -1,0 +1,86 @@
+{
+  "name": "react-folder",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@babel/plugin-syntax-jsx": "^7.12.13",
+    "@babel/plugin-transform-react-jsx": "^7.13.12",
+    "@babel/preset-env": "^7.14.0",
+    "@emotion/react": "^11.1.5",
+    "@emotion/styled": "^11.3.0",
+    "@fortawesome/react-fontawesome": "^0.1.14",
+    "@material-ui/core": "^5.0.0-alpha.32",
+    "@material-ui/lab": "^4.0.0-alpha.58",
+    "@react-firebase/firestore": "^0.5.5",
+    "@react-md/utils": "^2.8.2",
+    "@testing-library/jest-dom": "^5.11.4",
+    "@testing-library/react": "^11.1.0",
+    "@testing-library/user-event": "^12.1.10",
+    "bcryptjs": "^2.4.3",
+    "bootstrap": "^4.6.0",
+    "copy-image-clipboard": "^1.0.1",
+    "copy-to-clipboard": "^3.3.1",
+    "firebase": "^8.5.0",
+    "firebase-tools": "^9.10.2",
+    "global": "^4.4.0",
+    "lorem-ipsum": "^2.0.3",
+    "material-ui": "^0.20.2",
+    "mdb-react-ui-kit": "^1.0.0-beta4",
+    "mdbreact": "^5.0.2",
+    "node-cron": "^3.0.0",
+    "react": "^17.0.2",
+    "react-beautiful-dnd": "^13.1.0",
+    "react-bootstrap": "^1.6.0",
+    "react-csv": "^2.0.3",
+    "react-dom": "^17.0.2",
+    "react-dropzone": "^11.3.2",
+    "react-fontawesome": "^1.7.1",
+    "react-icons": "^4.2.0",
+    "react-md": "^2.8.2",
+    "react-router": "^5.2.0",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "^4.0.3",
+    "serve": "^11.3.2",
+    "server": "^1.0.32",
+    "uuid": "^8.3.2",
+    "web-vitals": "^1.0.1",
+    "ws": "^7.4.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@babel/preset-react": "^7.13.13",
+    "node-sass": "^5.0.0"
+  },
+  "mutator": {
+    "plugins": [
+      "@babel/plugin-syntax-jsx"
+    ]
+  },
+  "main": "index.js",
+  "repository": "https://github.com/strjonas/personalWebsiteReact.git",
+  "author": "strjonas <jonas.strabel@gmail.com>",
+  "license": "MIT"
+}
