@@ -15,8 +15,6 @@ export default function TaskColumnRowCon({
   //id: String, done String, inhalt String, kategorie String
   //title is a string with the category name
 
-  console.log(tasks);
-
   let temp = 0;
   tasks = tasks || [];
   temp = tasks.length;

@@ -1,11 +1,17 @@
 import "./style/index.scss";
-import React from "react";
+import React, { useState } from "react";
 import TaskHandler from "./components/TaskHandler";
+import AuthHandler from "./components/AuthHandler";
 
 function App() {
+  const [auth, setAuth] = useState(localStorage.getItem("token") !== null);
   return (
     <>
-      <TaskHandler />
+      {auth ? (
+        <TaskHandler setAuth={setAuth} />
+      ) : (
+        <AuthHandler setAuth={setAuth} />
+      )}
     </>
   );
 }

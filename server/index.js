@@ -5,28 +5,135 @@ const pool = require("./db");
 const cron = require("node-cron");
 const bcrypt = require("bcrypt");
 const helmet = require("helmet");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
 
+// Middelware
+
+const checkAuth = async (req, res, next) => {
+  console.log(req.headers);
+  const token = req.header("x-auth-token");
+
+  // CHECK IF WE EVEN HAVE A TOKEN
+  if (!token) {
+    return res.status(405).send("Invalid token");
+  }
+
+  try {
+    const user = await jwt.verify(token, process.env.ACCESS_SECRET_KEY);
+    req.email = user.email;
+    next();
+  } catch (error) {
+    res.status(405).send("Invalid token");
+  }
+};
+
+app.post("/register", async (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return res.status(403).send("Please enter all fields");
+  }
+  try {
+    await pool.query(
+      `SELECT * FROM users WHERE email = '${email}'`,
+      async function (error, user, fields) {
+        if (error) console.log(error);
+        else {
+          console.log(user);
+          if (user.length > 0) {
+            return res.status(403).send("User already exists");
+          }
+          // Hash the password
+          const salt = await bcrypt.genSalt(10);
+          const hashedPassword = await bcrypt.hash(password, salt);
+
+          // Insert the user into the database
+          await pool.query(
+            `INSERT INTO users (email, password) VALUES ('${email}', '${hashedPassword}')`
+          );
+
+          // Create a token
+          const token = jwt.sign({ email }, process.env.ACCESS_SECRET_KEY, {
+            expiresIn: "72h",
+          });
+
+          // putting an example categories with the user email in the database
+          await pool.query(
+            `INSERT INTO categories (email, liste) VALUES ('${email}', 'example')`
+          );
+
+          // Send the token to the user
+          return res.json({ token });
+        }
+      }
+    );
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+//function that logs user in
+app.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return res.status(403).send("Please enter all fields");
+  }
+  try {
+    await pool.query(
+      `SELECT * FROM users WHERE email = '${email}'`,
+      async function (error, user, fields) {
+        if (error) {
+          console.log(error);
+          // send error to user
+          return res.status(403).send("error");
+        } else {
+          if (!user) {
+            return res.status(403).send("User does not exist");
+          }
+
+          // Check if the password is correct
+          const validPassword = await bcrypt.compare(
+            password,
+            user[0].password
+          );
+          if (!validPassword) {
+            return res.status(403).send("Invalid password");
+          }
+
+          // Create a token
+          const token = jwt.sign({ email }, process.env.ACCESS_SECRET_KEY, {
+            expiresIn: "72h",
+          });
+
+          // Send the token to the user
+          return res.json({ token });
+        }
+      }
+    );
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 // get all tasks
 
-app.get("/tasks", async (req, res) => {
+app.get("/tasks", checkAuth, async (req, res) => {
   try {
-    // const alltasks = await pool.query("SELECT * FROM tasks");
-    // let liste = [];
-    // for (let i = 0; i < alltasks.length; i++) {
-    //   liste.push(alltasks[i]);
-    // }
-    // res.json(liste);
-    await pool.query("SELECT * FROM tasks", function (error, results, fields) {
-      if (error) console.log(error);
-      else {
-        console.log(results);
-        res.json(results);
+    console.log(req.email);
+    await pool.query(
+      `SELECT kategorie, inhalt, done, id FROM tasks where email = '${req.email}'`,
+      function (error, results, fields) {
+        if (error) console.log(error);
+        else {
+          console.log(results);
+          return res.json(results);
+        }
       }
-    });
+    );
   } catch (err) {
     res.json("error occured");
     console.log(`${err.message} when fetching tasks ${new Date()}`);
@@ -35,38 +142,38 @@ app.get("/tasks", async (req, res) => {
 
 // add a task
 
-app.post("/tasks", async (req, res) => {
+app.post("/tasks", checkAuth, async (req, res) => {
   try {
     let { kategorie, inhalt, done, id } = req.body;
     done === "FALSE" ? (done = 0) : (done = 1);
     await pool.query(
-      `INSERT INTO tasks (kategorie, inhalt, done, id) VALUES('${kategorie}','${inhalt}','${done}', '${id}')`
+      `INSERT INTO tasks (kategorie, inhalt, done, id, email) VALUES('${kategorie}','${inhalt}','${done}', '${id}', '${req.email}')`
     );
 
-    res.json("added task");
+    return res.json("added task");
   } catch (err) {
-    res.json("error occured");
+    return res.json("error occured");
     console.log(err.message);
   }
 });
 
 // delete a task
 
-app.delete("/tasks/:id", async (req, res) => {
+app.delete("/tasks/:id", checkAuth, async (req, res) => {
   try {
     const { id } = req.params;
     await pool.query(`DELETE FROM tasks WHERE id = '${id}'`);
 
-    res.json("task was deleted");
+    return res.json("task was deleted");
   } catch (err) {
-    res.json("error occured");
     console.log(err.message);
+    return res.json("error occured");
   }
 });
 
 //update a task
 
-app.put("/tasks/:id", async (req, res) => {
+app.put("/tasks/:id", checkAuth, async (req, res) => {
   try {
     const { id } = req.params;
     const { newInhalt } = req.body;
@@ -75,16 +182,16 @@ app.put("/tasks/:id", async (req, res) => {
       `UPDATE tasks SET inhalt = '${newInhalt}' WHERE id = '${id}'`
     );
 
-    res.json("updated task");
+    return res.json("updated task");
   } catch (err) {
     console.log(err.message);
-    res.json("error occured");
+    return res.json("error occured");
   }
 });
 
 //update a kategorie
 
-app.put("/kategorie/tasks", async (req, res) => {
+app.put("/kategorie/tasks", checkAuth, async (req, res) => {
   try {
     const { id, newkat } = req.body;
     console.log(id, newkat);
@@ -92,39 +199,41 @@ app.put("/kategorie/tasks", async (req, res) => {
       `UPDATE tasks SET kategorie = '${newkat}' WHERE id = '${id}'`
     );
 
-    res.json("updated task");
+    return res.json("updated task");
   } catch (err) {
-    res.json("error occured");
     console.log(err.message);
+    return res.json("error occured");
   }
 });
 
 //update a tasks state(done or not)
 
-app.put("/tasks/state/:id", async (req, res) => {
+app.put("/tasks/state/:id", checkAuth, async (req, res) => {
   try {
     const { id } = req.params;
     let { param } = req.body;
     param === "FALSE" ? (param = 0) : (param = 1);
     await pool.query(`UPDATE tasks SET done = ${param} WHERE id = '${id}'`);
 
-    res.json("updated task");
+    return res.json("updated task");
   } catch (err) {
-    res.json("error occured");
     console.log(err.message);
+    return res.json("error occured");
   }
 });
 
 // deleting all tasks of a kategorie (deleting the kategorie)
 
-app.delete("/all/tasks", async (req, res) => {
+app.delete("/all/tasks", checkAuth, async (req, res) => {
   try {
     const { kategorie } = req.body;
-    await pool.query(`delete from tasks where kategorie = ${kategorie}`);
-    res.json("deleted kategorie");
+    await pool.query(
+      `delete from tasks where kategorie = ${kategorie} and email = '${req.email}'`
+    );
+    return res.json("deleted kategorie");
   } catch (err) {
-    res.json("error occured");
     console.log(err.message);
+    return res.json("error occured");
   }
 });
 
@@ -148,35 +257,37 @@ async function updateDates() {
 
 // get Catlist
 
-app.get("/tasks/cats", async (req, res) => {
+app.get("/tasks/cats", checkAuth, async (req, res) => {
   try {
     await pool.query(
-      "SELECT * FROM categories",
+      "SELECT * FROM categories where email = '" + req.email + "'",
       function (error, results, fields) {
         if (error) console.log(error);
         else {
           console.log(results);
-          res.json(results);
+          return res.json(results);
         }
       }
     );
   } catch (err) {
     console.log(err.message);
-    res.json("error occured");
+    return res.json("error occured");
   }
 });
 
 // add a Cat
 
-app.post("/tasks/cats/add", async (req, res) => {
+app.post("/tasks/cats/add", checkAuth, async (req, res) => {
   try {
     const { newListe } = req.body;
-    const f = await pool.query(`update categories set liste = '${newListe}'`);
+    const f = await pool.query(
+      `update categories set liste = '${newListe}' where email = ${req.email}`
+    );
     console.log(f);
-    res.json("added Task");
+    return res.json("added Task");
   } catch (err) {
-    res.json("error occured");
     console.log(err.message);
+    return res.json("error occured");
   }
 });
 
@@ -192,7 +303,8 @@ cron.schedule("59 23 * * *", function () {
 });
 
 const port = 5000;
+const host = "192.168.178.41";
 
-app.listen(port, () => {
+app.listen(port, host, () => {
   console.log("server started");
 });

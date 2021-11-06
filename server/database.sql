@@ -4,10 +4,12 @@ CREATE TABLE note(
 );
 
 CREATE TABLE tasks(
+    unusedid SERIAL PRIMARY KEY,
     id TEXT,
     kategorie TEXT,
     inhalt TEXT,
-    done BOOLEAN
+    done BOOLEAN,
+    email TEXT
 );
 
 CREATE TABLE bookmarks(
@@ -23,7 +25,9 @@ CREATE TABLE pictures(
 );
 
 CREATE TABLE categories(
-    liste text
+    id SERIAL PRIMARY KEY,
+    liste text,
+    email text
 );
 
 CREATE TABLE pastebin(

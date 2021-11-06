@@ -33,6 +33,10 @@ export class TaskHandler extends Component {
       }
     });
 
+    if (localStorage.getItem("token") === null) {
+      this.props.setAuth(false);
+    }
+
     this.setDates();
     this.getOtherCats();
     this.addTask = this.addTask.bind(this);
@@ -139,7 +143,13 @@ export class TaskHandler extends Component {
 
   async getTasks() {
     try {
-      const response = await fetch(`http://${this.state.api}/tasks`);
+      const response = await fetch(`http://${this.state.api}/tasks`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-auth-token": localStorage.getItem("token"),
+        },
+      });
       const jsonData = await response.json();
       console.log(jsonData);
       this.state.rawData = jsonData;
@@ -153,7 +163,13 @@ export class TaskHandler extends Component {
 
   async returnTasks() {
     try {
-      const response = await fetch(`http://${this.state.api}/tasks`);
+      const response = await fetch(`http://${this.state.api}/tasks`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-auth-token": localStorage.getItem("token"),
+        },
+      });
       const jsonData = await response.json();
       if (jsonData !== undefined) {
         return jsonData;
@@ -188,7 +204,10 @@ export class TaskHandler extends Component {
         const body = { kategorie, inhalt, done, id };
         await fetch(`http://${this.state.api}/tasks`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            "x-auth-token": localStorage.getItem("token"),
+          },
           body: JSON.stringify(body),
         });
       } catch (err) {
@@ -203,6 +222,10 @@ export class TaskHandler extends Component {
     try {
       await fetch(`http://${this.state.api}/tasks/${id["id"]}`, {
         method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "x-auth-token": localStorage.getItem("token"),
+        },
       });
     } catch (err) {
       console.error(err);
@@ -222,7 +245,10 @@ export class TaskHandler extends Component {
       let body = { newkat: newkat, id: id };
       await fetch(`http://${this.state.api}/kategorie/tasks`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "x-auth-token": localStorage.getItem("token"),
+        },
         body: JSON.stringify(body),
       });
     } catch (error) {
@@ -243,7 +269,10 @@ export class TaskHandler extends Component {
       const body = { newInhalt };
       await fetch(`http://${this.state.api}/tasks/${obj["id"]}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "x-auth-token": localStorage.getItem("token"),
+        },
         body: JSON.stringify(body),
       });
     } catch (err) {
@@ -255,7 +284,22 @@ export class TaskHandler extends Component {
 
   async getCatList() {
     try {
-      const response = await fetch(`http://${this.state.api}/tasks/cats`);
+      const response = await fetch(`http://${this.state.api}/tasks/cats`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-auth-token": localStorage.getItem("token"),
+        },
+      });
+      try {
+        if (response.status === 405) {
+          console.log("Not authorized");
+          this.props.setAuth(false);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+
       try {
         const jsonData = await response.json();
         console.log(jsonData);
@@ -284,7 +328,10 @@ export class TaskHandler extends Component {
 
       await fetch(`http://${this.state.api}/tasks/cats/add`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "x-auth-token": localStorage.getItem("token"),
+        },
         body: JSON.stringify(body),
       });
     } catch (error) {
@@ -309,7 +356,10 @@ export class TaskHandler extends Component {
       const body = { newListe: newListe };
       await fetch(`http://${this.state.api}/tasks/cats/add`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "x-auth-token": localStorage.getItem("token"),
+        },
         body: JSON.stringify(body),
       });
     } catch (error) {
@@ -325,7 +375,10 @@ export class TaskHandler extends Component {
     try {
       await fetch(`http://${this.state.api}/tasks/state/${obj["id"]}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "x-auth-token": localStorage.getItem("token"),
+        },
         body: JSON.stringify(body),
       });
     } catch (error) {
@@ -341,7 +394,10 @@ export class TaskHandler extends Component {
       await this.deleteCat(kategorie);
       await fetch(`http://${this.state.api}/all/tasks`, {
         method: "DELETE",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "x-auth-token": localStorage.getItem("token"),
+        },
         body: JSON.stringify(body),
       });
       await this.getOtherCats();
@@ -464,6 +520,14 @@ export class TaskHandler extends Component {
               <div className="middel-task-toolbar">
                 <div className="toolbar-div">
                   <CSVLink {...csvReport}> Export </CSVLink>
+                  <button
+                    onClick={() => {
+                      localStorage.removeItem("token");
+                      window.location.reload();
+                    }}
+                  >
+                    Logout
+                  </button>
                   <AddCatModal
                     obj={{ id: 10, inhalt: "" }}
                     addCat={this.addOtherCat}
