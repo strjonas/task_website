@@ -153,7 +153,6 @@ app.post("/tasks", checkAuth, async (req, res) => {
     return res.json("added task");
   } catch (err) {
     return res.json("error occured");
-    console.log(err.message);
   }
 });
 
@@ -303,8 +302,8 @@ cron.schedule("59 23 * * *", function () {
 });
 
 const port = 5000;
-const host = "192.168.178.41";
+//const host = "192.168.178.41";
 
-app.listen(port, host, () => {
+app.listen(port || process.env.PORT, () => {
   console.log("server started");
 });

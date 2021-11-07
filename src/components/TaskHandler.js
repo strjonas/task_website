@@ -150,7 +150,7 @@ export class TaskHandler extends Component {
 
   async getTasks() {
     try {
-      const response = await fetch(`http://${this.state.api}/tasks`, {
+      const response = await fetch(`https://${this.state.api}/tasks`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -170,7 +170,7 @@ export class TaskHandler extends Component {
 
   async returnTasks() {
     try {
-      const response = await fetch(`http://${this.state.api}/tasks`, {
+      const response = await fetch(`https://${this.state.api}/tasks`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -209,7 +209,7 @@ export class TaskHandler extends Component {
         let inhalt = task;
         let id = uuidv4();
         const body = { kategorie, inhalt, done, id };
-        await fetch(`http://${this.state.api}/tasks`, {
+        await fetch(`https://${this.state.api}/tasks`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -227,7 +227,7 @@ export class TaskHandler extends Component {
 
   async removeTask(id) {
     try {
-      await fetch(`http://${this.state.api}/tasks/${id["id"]}`, {
+      await fetch(`https://${this.state.api}/tasks/${id["id"]}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -250,7 +250,7 @@ export class TaskHandler extends Component {
     let id = result.draggableId;
     try {
       let body = { newkat: newkat, id: id };
-      await fetch(`http://${this.state.api}/kategorie/tasks`, {
+      await fetch(`https://${this.state.api}/kategorie/tasks`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -274,7 +274,7 @@ export class TaskHandler extends Component {
         .replaceAll("<strong>", "**")
         .replaceAll("<u>", "&&");
       const body = { newInhalt };
-      await fetch(`http://${this.state.api}/tasks/${obj["id"]}`, {
+      await fetch(`https://${this.state.api}/tasks/${obj["id"]}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -291,7 +291,7 @@ export class TaskHandler extends Component {
 
   async getCatList() {
     try {
-      const response = await fetch(`http://${this.state.api}/tasks/cats`, {
+      const response = await fetch(`https://${this.state.api}/tasks/cats`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -333,7 +333,7 @@ export class TaskHandler extends Component {
       let newListe = temp.join("/");
       const body = { newListe: newListe };
 
-      await fetch(`http://${this.state.api}/tasks/cats/add`, {
+      await fetch(`https://${this.state.api}/tasks/cats/add`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -361,7 +361,7 @@ export class TaskHandler extends Component {
 
       console.log(newListe);
       const body = { newListe: newListe };
-      await fetch(`http://${this.state.api}/tasks/cats/add`, {
+      await fetch(`https://${this.state.api}/tasks/cats/add`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -380,7 +380,7 @@ export class TaskHandler extends Component {
     done ? (param = "FALSE") : (param = "TRUE");
     const body = { param };
     try {
-      await fetch(`http://${this.state.api}/tasks/state/${obj["id"]}`, {
+      await fetch(`https://${this.state.api}/tasks/state/${obj["id"]}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -399,7 +399,7 @@ export class TaskHandler extends Component {
     try {
       const body = { kategorie };
       await this.deleteCat(kategorie);
-      await fetch(`http://${this.state.api}/all/tasks`, {
+      await fetch(`https://${this.state.api}/all/tasks`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
