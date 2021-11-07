@@ -12,33 +12,51 @@ function LoginForm({ setAuth, setLogin }) {
     setPassword(event.target.value);
   }
   function login() {
-    fetch(`http://${API}/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: email,
-        password: password,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data.token);
-        localStorage.setItem("token", data.token);
-        setAuth(true);
-      });
+    try {
+      fetch(`http://${API}/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data.token);
+          localStorage.setItem("token", data.token);
+          setAuth(true);
+        });
+    } catch (error) {
+      console.log(error);
+    }
   }
   return (
-    <div>
-      <input value={email} onChange={handleChangeEmail} type="email"></input>
-      <input
-        value={password}
-        onChange={handleChangePassword}
-        type="password"
-      ></input>
-      <button onClick={login}>Login</button>
-      <button onClick={setLogin}>Register</button>
+    <div className="outerDiv">
+      <div className="Form">
+        <input
+          placeholder="Email"
+          className="emailInput"
+          value={email}
+          onChange={handleChangeEmail}
+          type="email"
+        ></input>
+        <input
+          placeholder="Password"
+          className="passwordInput"
+          value={password}
+          onChange={handleChangePassword}
+          type="password"
+        ></input>
+        <button className="applyButton" onClick={login}>
+          Login
+        </button>
+        <button className="switchButton" onClick={setLogin}>
+          No account yet? Register!
+        </button>
+      </div>
     </div>
   );
 }

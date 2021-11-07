@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import LoginForm from "./LoginForm";
 import RegisterForm from "./RegisterForm";
+import "./AuthHandler.scss";
 
 function AuthHandler({ setAuth }) {
   const [isLogin, setIsLogin] = useState(true);

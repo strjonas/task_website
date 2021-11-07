@@ -519,19 +519,23 @@ export class TaskHandler extends Component {
 
               <div className="middel-task-toolbar">
                 <div className="toolbar-div">
-                  <CSVLink {...csvReport}> Export </CSVLink>
-                  <button
-                    onClick={() => {
-                      localStorage.removeItem("token");
-                      window.location.reload();
-                    }}
-                  >
-                    Logout
-                  </button>
                   <AddCatModal
                     obj={{ id: 10, inhalt: "" }}
                     addCat={this.addOtherCat}
                   />
+                  <div>
+                    <CSVLink {...csvReport}> Export </CSVLink>
+
+                    <button
+                      className="task-logout-button"
+                      onClick={() => {
+                        localStorage.removeItem("token");
+                        window.location.reload();
+                      }}
+                    >
+                      Logout
+                    </button>
+                  </div>
                 </div>
               </div>
 

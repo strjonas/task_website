@@ -281,7 +281,7 @@ app.post("/tasks/cats/add", checkAuth, async (req, res) => {
   try {
     const { newListe } = req.body;
     const f = await pool.query(
-      `update categories set liste = '${newListe}' where email = ${req.email}`
+      `update categories set liste = '${newListe}' where email = '${req.email}'`
     );
     console.log(f);
     return res.json("added Task");

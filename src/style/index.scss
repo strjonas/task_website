@@ -4,7 +4,7 @@
 
 $bg-co: #181a1b;
 $fg-co: #e8e6e3;
-$red: #bf1209;
+$red: #ed2939;
 $sep-co: #212222;
 
 body {
@@ -194,6 +194,17 @@ html {
   color: $fg-co;
   background-color: $bg-co;
 }
+
+.task-logout-button {
+  border-radius: 3px;
+  border: none;
+  padding: 5px;
+  background-color: $sep-co;
+  color: $red;
+  font-weight: bold;
+  margin-left: 10px;
+}
+
 .innerContainer {
   min-width: 360px;
   overflow: hidden;

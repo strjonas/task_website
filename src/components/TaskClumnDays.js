@@ -1,3 +1,4 @@
+import { color } from "@material-ui/system";
 import React from "react";
 import TaskColumnRowCon from "./taskColumnRowCon";
 
@@ -28,6 +29,42 @@ export default function TaskClumnDays({
     "November",
     "December",
   ];
+  // function that gets the current date in the format of year-month-day-dayOfWeek
+  function getDate() {
+    var today = new Date();
+    var dd = String(today.getDate());
+    var mm = String(today.getMonth() + 1); //January is 0!
+    var yyyy = today.getFullYear();
+    var dayOfWeek = today.getDay();
+    var dayOfWeekString = "";
+    switch (dayOfWeek) {
+      case 0:
+        dayOfWeekString = "Sunday";
+        break;
+      case 1:
+        dayOfWeekString = "Monday";
+        break;
+      case 2:
+        dayOfWeekString = "Tuesday";
+        break;
+      case 3:
+        dayOfWeekString = "Wednesday";
+        break;
+      case 4:
+        dayOfWeekString = "Thursday";
+        break;
+      case 5:
+        dayOfWeekString = "Friday";
+        break;
+      case 6:
+        dayOfWeekString = "Saturday";
+        break;
+      default:
+        dayOfWeekString = "";
+    }
+    return yyyy + "-" + mm + "-" + dd + "-" + dayOfWeekString;
+  }
+
   function monthNumToName(monthnum) {
     return months[monthnum - 1] || "";
   }
@@ -46,10 +83,21 @@ export default function TaskClumnDays({
             justifyContent: "center",
           }}
         >
-          <div style={{ fontSize: "20px", textTransform: "uppercase" }}>
+          <div
+            style={{
+              fontSize: "20px",
+              textTransform: "uppercase",
+              color: `${getDate() === title ? "#ED2939" : "white"}`,
+            }}
+          >
             {title.split("-")[3]}{" "}
           </div>
-          <div style={{ fontSize: "11px" }}>
+          <div
+            style={{
+              fontSize: "11px",
+              color: `${getDate() === title ? "#ED2939" : "white"}`,
+            }}
+          >
             {title.split("-")[2] +
               "." +
               monthNumToName(title.split("-")[1]) +
