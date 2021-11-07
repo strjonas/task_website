@@ -39,6 +39,7 @@ export class TaskHandler extends Component {
 
     this.setDates();
     this.getOtherCats();
+
     this.addTask = this.addTask.bind(this);
     this.removeTask = this.removeTask.bind(this);
     this.toogleDone = this.toogleDone.bind(this);
@@ -100,7 +101,12 @@ export class TaskHandler extends Component {
     ];
     var result = [];
     var dV = this.state.datumVerschiebung;
-    for (var i = dV; i < Math.floor((window.innerWidth - 65) / 360) + dV; i++) {
+    let counter = Math.floor((window.innerWidth - 65) / 360) + dV;
+    if (counter < 0) {
+      counter = 1;
+      dV = 0;
+    }
+    for (var i = dV; i < counter; i++) {
       var d = new Date();
       d.setDate(d.getDate() + i);
       let temp =
@@ -114,6 +120,7 @@ export class TaskHandler extends Component {
       result.push(temp);
       temp = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
     }
+    console.log(result);
     this.state.dates = result;
   }
 
@@ -476,7 +483,7 @@ export class TaskHandler extends Component {
         data: [],
       };
     }
-
+    console.log(this.state.dates);
     return (
       <>
         <div>
