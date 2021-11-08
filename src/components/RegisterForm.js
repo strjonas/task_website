@@ -13,7 +13,7 @@ function RegisterForm({ setAuth, setLogin }) {
   }
   function register() {
     try {
-      fetch(`http://${API}/register`, {
+      fetch(`https://${API}/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

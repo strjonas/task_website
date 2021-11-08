@@ -13,7 +13,7 @@ function LoginForm({ setAuth, setLogin }) {
   }
   function login() {
     try {
-      fetch(`http://${API}/login`, {
+      fetch(`https://${API}/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
