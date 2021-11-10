@@ -10,6 +10,8 @@ export default function TaskColumnRowCon({
   updateTask,
   addTask,
   toggleDone,
+  moveDayBack,
+  moveDayUp,
 }) {
   //tasks is a list of javascript objects with the following properties
   //id: String, done String, inhalt String, kategorie String
@@ -57,6 +59,8 @@ export default function TaskColumnRowCon({
                       addTask={addTask}
                       updateTask={updateTask}
                       toggleDone={toggleDone}
+                      moveDayBack={moveDayBack}
+                      moveDayUp={moveDayUp}
                     />
                   </div>
                 )}

@@ -1,6 +1,7 @@
 import React, { useState, Fragment } from "react";
 import { MdDelete } from "react-icons/md";
 import EditTodo from "./editTask";
+import { Swipeable, defineSwipe } from "react-touch";
 
 export default function TaskColumnRows({
   title,
@@ -9,6 +10,8 @@ export default function TaskColumnRows({
   updateTask,
   toggleDone,
   addTask,
+  moveDayBack,
+  moveDayUp,
 }) {
   //task is a javascript object with the following properties
   //id: String, done String, inhalt String, kategorie String
@@ -110,9 +113,16 @@ export default function TaskColumnRows({
         </div>
       ));
 
+  const swipe = defineSwipe({ swipeDistance: 50 });
   return (
     <Fragment>
-      <div className="taskRow">{row}</div>
+      <Swipeable
+        config={swipe}
+        onSwipeRight={() => moveDayUp(task)}
+        onSwipeLeft={() => moveDayBack(task)}
+      >
+        <div className="taskRow">{row}</div>
+      </Swipeable>
     </Fragment>
   );
 }

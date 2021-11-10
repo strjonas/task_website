@@ -10,6 +10,8 @@ export default function TaskClumnDays({
   reorderTasks,
   removeTask,
   toggleDone,
+  moveDayBack,
+  moveDayUp,
 }) {
   //object is a javascript object with the following properties
   //id: String, done String, inhalt String, kategorie String
@@ -116,6 +118,8 @@ export default function TaskClumnDays({
           updateTask={updateTask}
           toggleDone={toggleDone}
           reorderTasks={reorderTasks}
+          moveDayUp={moveDayUp}
+          moveDayBack={moveDayBack}
         />
       </div>
     </div>

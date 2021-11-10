@@ -24,12 +24,15 @@ export class TaskHandler extends Component {
       api: process.env.REACT_APP_API || "localhost:5000",
     };
 
+    this.isDragging = false;
+    this.draggingObj = "";
+
     window.addEventListener("resize", () => {
-      if (Math.floor((window.innerWidth - 65) / 360) !== this.state.columns) {
+      var columns = Math.floor((window.innerWidth - 65) / 360);
+      if (columns !== this.state.columns) {
         this.setDates();
         this.getOtherCats();
-        this.getTasks();
-        this.setState({ columns: Math.floor((window.innerWidth - 65) / 360) });
+        this.setState({ columns: columns });
       }
     });
 
@@ -39,6 +42,10 @@ export class TaskHandler extends Component {
 
     this.setDates();
     this.getOtherCats();
+
+    this.dateplusone = this.dateplusone.bind(this);
+    this.moveDayBack = this.moveDayBack.bind(this);
+    this.moveDayUp = this.moveDayUp.bind(this);
 
     this.addTask = this.addTask.bind(this);
     this.removeTask = this.removeTask.bind(this);
@@ -103,8 +110,21 @@ export class TaskHandler extends Component {
     var dV = this.state.datumVerschiebung;
     let counter = Math.floor((window.innerWidth - 65) / 360) + dV;
     if (counter < 0) {
-      counter = 1;
-      dV = 0;
+      var d = new Date();
+      d.setDate(d.getDate() + dV);
+      let temp =
+        d.getFullYear() +
+        "-" +
+        (d.getMonth() + 1) +
+        "-" +
+        d.getDate() +
+        "-" +
+        weekDays[d.getDay()];
+      result.push(temp);
+      temp = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
+      console.log(result);
+      this.state.dates = result;
+      return;
     }
     for (var i = dV; i < counter; i++) {
       var d = new Date();
@@ -392,7 +412,6 @@ export class TaskHandler extends Component {
       console.error(error);
     }
     cb_refreshState();
-    //await this.getTasks();
   }
 
   async deletekategorie(kategorie) {
@@ -438,7 +457,9 @@ export class TaskHandler extends Component {
   }
 
   handleOnDragEnd(result) {
+    console.log(result.destination);
     if (!result.destination) return;
+
     if (result.destination.droppableId === result.source.droppableId) {
       return;
     } else {
@@ -454,6 +475,48 @@ export class TaskHandler extends Component {
       await this.changeCat(result);
     }
     await this.getOtherCats();
+  }
+  async updateCat(kategorie, id) {
+    try {
+      let body = { newkat: kategorie, id: id };
+      await fetch(`https://${this.state.api}/kategorie/tasks`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "x-auth-token": localStorage.getItem("token"),
+        },
+        body: JSON.stringify(body),
+      });
+    } catch (error) {
+      console.log(error);
+    }
+    await this.getTasks();
+  }
+  moveDayBack(obj) {
+    this.updateCat(this.dateminusone(obj["kategorie"]), obj["id"]);
+  }
+  moveDayUp(obj) {
+    this.updateCat(this.dateplusone(obj["kategorie"]), obj["id"]);
+  }
+
+  // function that generates a date 1 day after input date format: yyyy-mm-dd
+  dateplusone(date) {
+    let d = new Date(date);
+    d.setDate(d.getDate() + 1);
+    let dd = d.getDate();
+    let mm = d.getMonth() + 1;
+    let y = d.getFullYear();
+    return y + "-" + mm + "-" + dd;
+  }
+
+  // same function as above but with -1 day
+  dateminusone(date) {
+    let d = new Date(date);
+    d.setDate(d.getDate() - 1);
+    let dd = d.getDate();
+    let mm = d.getMonth() + 1;
+    let y = d.getFullYear();
+    return y + "-" + mm + "-" + dd;
   }
 
   render() {
@@ -483,11 +546,17 @@ export class TaskHandler extends Component {
         data: [],
       };
     }
-    console.log(this.state.dates);
+
     return (
       <>
-        <div>
-          <DragDropContext onDragEnd={this.handleOnDragEnd}>
+        <div onMouseMove={this.handleMouseMove}>
+          <DragDropContext
+            onDragEnd={this.handleOnDragEnd}
+            onDragStart={(e) => {
+              this.isDragging = true;
+              this.draggingObj = e;
+            }}
+          >
             <div
               className="main-task-container"
               style={{ padding: 0, margin: 0 }}
@@ -507,6 +576,8 @@ export class TaskHandler extends Component {
                       updateTask={this.updateTask}
                       toggleDone={this.toogleDone}
                       reorderTasks={this.reorderTasks}
+                      moveDayBack={this.moveDayBack}
+                      moveDayUp={this.moveDayUp}
                       object={
                         temp[
                           date.split("-")[0] +
@@ -519,6 +590,7 @@ export class TaskHandler extends Component {
                     />
                   ))}
                 </div>
+
                 <div onClick={this.rightClick} className="arrow-icon-container">
                   <MdKeyboardArrowRight className="arrow-icons" />
                 </div>
