@@ -53,9 +53,6 @@ function LoginForm({ setAuth, setLogin }) {
         <button className="applyButton" onClick={login}>
           Login
         </button>
-        <button className="switchButton" onClick={setLogin}>
-          No account yet? Register!
-        </button>
       </div>
     </div>
   );
